@@ -1,0 +1,19 @@
+﻿@page "/genre/edit"
+
+<GenreAddEditForm Genre="Genre" OnValidSubmit="Edit" />
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private GenreDto Genre;
+
+    protected override void OnInitialized()
+    {
+        Genre = new GenreDto { Id = this.Id, Name = "Comedy" };
+    }
+
+    private void Edit()
+    {
+        Console.WriteLine($"New Genre info \nId: {Genre.Id} \nName: {Genre.Name}");
+    }
+}

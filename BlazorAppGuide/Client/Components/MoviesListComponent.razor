@@ -1,0 +1,28 @@
+﻿@inject IJSRuntime js
+@using Model.Entitties
+
+<div style="display: flex; flex-wrap: wrap; align-items: center;">
+    <GenericListComponent GenericList="Movies">
+        <ListAny Context="movie">
+            <MovieSingleComponent Movie="movie" DeleteMovie="DeleteMovie" />
+        </ListAny>
+    </GenericListComponent>
+</div>
+
+
+@code {
+    [Parameter]
+    public List<Movie> Movies { get; set; }
+
+    private async Task DeleteMovie(Movie movie)
+    {      
+        bool confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to remove the movie {movie.Title}?");
+
+        if (confirm)
+        {
+            Movies.Remove(movie);
+            //Console.WriteLine($"Deleting the movie {movie.Title}");
+            await js.InvokeVoidAsync("console.log", $"Deleting the movie {movie.Title}");
+        }       
+    }
+}

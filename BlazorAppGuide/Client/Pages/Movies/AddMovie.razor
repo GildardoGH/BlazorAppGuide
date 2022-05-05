@@ -1,0 +1,18 @@
+﻿@page "/movie/add"
+@using Model.Entitties
+@inject NavigationManager navigationManager
+
+<h3>Add a Movie</h3>
+
+<MovieAddEditForm Movie="model" Loading="_loading" OnValidSubmit="Add" />
+
+
+@code {
+    private MovieDto model = new();
+    private bool _loading = false;
+
+    private void Add()
+    {
+        
+    }
+}

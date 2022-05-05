@@ -1,0 +1,13 @@
+﻿@page "/actors/add"
+
+<h3>Add an Actor</h3>
+<ActorAddEditForm Actor="Actor" OnValidSubmit="Add"></ActorAddEditForm>
+
+@code {
+    public ActorDto Actor = new();
+
+    private void Add()
+    {
+        Console.WriteLine($"First Name: {Actor.FirstName}\nLast Name: {Actor.LastName}");
+    }
+}
