@@ -1,7 +1,61 @@
 ﻿@page "/actors"
+@inject IActorApi apiActor
+@inject NavigationManager navigationManager
 
-<h3>Actors</h3>
+<div class="px-5">
+    <div class="d-flex justify-content-between pb-3">
+        <div>
+            <h3>Actors</h3>
+        </div>
+        <div>
+            <a href="actor/add" class="btn btn-primary">Add Actor</a>
+        </div>      
+    </div>
+
+    @if (_loading)
+    {
+        <div class="d-flex justify-content-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" style="height:100px;" />
+        </div>
+    }
+    else
+    {
+        <div class="d-flex @(model.Count < 4 ? "" : "justify-content-between")">
+            @if (model.Any())
+            {
+                foreach (var item in model)
+                {
+                    <div class="card @(model.Count < 4 ? "mr-5" : "")" style="width: 15rem;" @onclick="@(() => navigationManager.NavigateTo($"actor/{item.Id}"))">
+                        <img class="card-img-top" src="@item.Picture" alt="Actor picture" style="height:280px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>@item.FirstName @item.LastName</b></h5>
+                            <div class="d-flex justify-content-end">
+                                <a href="@($"actor/edit/{item.Id}")" class="btn btn-secondary">Edit</a>
+                                <button type="button" class="btn btn-danger ml-2">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>There are no elements to show.</p>
+            }
+        </div>       
+    }
+</div>
+
 
 @code {
+    private List<ActorDto> model = new();
+    private bool _loading = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+
+        model = await apiActor.GetAll();
+
+        _loading = false;
+    }
 }

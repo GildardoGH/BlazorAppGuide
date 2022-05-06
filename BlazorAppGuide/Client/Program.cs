@@ -30,6 +30,7 @@ namespace BlazorAppGuide.Client
         {
             services.AddScoped<IMovieApi, MovieApi>();
             services.AddScoped<IGenreApi, GenreApi>();
+            services.AddScoped<IActorApi, ActorApi>();
         }
     }
 }

@@ -1,11 +1,56 @@
 ﻿@page "/genres"
+@inject IGenreApi genreApi
 
-<h3>Genres</h3>
+<div class="px-5">
+    <h3>Genres</h3>
 
-<div class="form-group">
-    <a class="btn btn-info" href="genre/add">Add Genre</a>
+    @if (_loading)
+    {
+        <div class="d-flex justify-content-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" style="height:100px;" />
+        </div>
+    }
+    else
+    {
+        <div class="">
+            @if (model.Any())
+            {
+                foreach (var item in model)
+                {
+                    <div class="d-flex flex-row">
+                        <div class="d-flex align-items-center pb-3" style="width: 100px;">
+                            @item.Name
+                        </div>
+
+                        <div class="pl-2">
+                            <a href="@($"genre/edit/{item.Id}")" class="btn btn-secondary">Edit</a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>There are no elements to show.</p>
+            }
+            <div class="form-group">
+                <a class="btn btn-info" href="genre/add">Add Genre</a>
+            </div>
+        </div>
+    }
 </div>
 
-@code {
 
+@code {
+    private List<GenreDto> model = new();
+    private bool _loading = false;
+    private string route = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+
+        model = await genreApi.GetAll();
+
+        _loading = false;
+    }
 }

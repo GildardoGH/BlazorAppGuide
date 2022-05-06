@@ -1,37 +1,77 @@
 ﻿<EditForm Model="Actor" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator />
-    <div class="form-group">
-        <label>First Name:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="Actor.FirstName" />
-            <ValidationMessage For="@(() => Actor.FirstName)" />
+    <FluentValidationValidator />
+
+    <div class="row" style="height:500px;">
+        <div class="col-sm-5">
+            <div class="h-100 d-flex align-items-start flex-column">
+                <div class="w-100 mb-auto border border-dark">
+                    @if (!string.IsNullOrEmpty(Actor.Picture))
+                    {
+                        <img src="@Actor.Picture" alt="Picture" style="height:400px;" />
+                    }
+                    else
+                    {
+                        <img src="https://cdn5.vectorstock.com/i/1000x1000/21/19/unknown-person-flat-icon-vector-15222119.jpg" alt="Unknown" style="height:400px;" />
+                    }
+                </div>
+                <div class="w-100 form-group">
+                    <label>Picture Url:</label>
+                    <div>
+                        <InputText class="form-control" @bind-Value="Actor.Picture" />
+                        <ValidationMessage For="@(() => Actor.Picture)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <div class="form-group">
+                <label>First Name:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="Actor.FirstName" />
+                    <ValidationMessage For="@(() => Actor.FirstName)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Last Name:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="Actor.LastName" />
+                    <ValidationMessage For="@(() => Actor.LastName)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Date of Birth:</label>
+                <div>
+                    <InputDate class="form-control" @bind-Value="Actor.DateOfBirth" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>First Name:</label>
+                <div>
+                    <InputNumber class="form-control" @bind-Value="Actor.YearsActive" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Biography:</label>
+                <div>
+                    <InputTextArea class="form-control" @bind-Value="Actor.Biography" style="height:60px; resize: none;" />
+                    <ValidationMessage For="@(() => Actor.Biography)" />
+                </div>
+            </div>
+            <div class="d-flex flex-row-reverse">
+                <button type="submit" class="btn btn-success">
+                    <img src="https://www.mansarovar.com.co/app/PQRS/LibraryCSS/giphy.gif" style="width:20px; height:20px;" class="@(Loading ? "" : "d-none")">
+                    Save
+                </button>
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <label>Last Name:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="Actor.LastName" />
-            <ValidationMessage For="@(() => Actor.LastName)" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label>Date of Birth:</label>
-        <div>
-            <InputDate class="form-control" @bind-Value="Actor.DateOfBirth" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label>First Name:</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="Actor.YearsActive" />
-        </div>
-    </div>
-    <button type="submit" class="btn btn-success">Save</button>
 </EditForm>
 
 @code {
     [Parameter]
     public ActorDto Actor { get; set; }
+    [Parameter]
+    public bool Loading { get; set; }
     [Parameter]
     public EventCallback OnValidSubmit { get; set; }
 }

@@ -1,19 +1,42 @@
-﻿@page "/genre/edit"
+﻿@page "/genre/edit/{id:int}"
+@inject IGenreApi genreApi
+@inject NavigationManager navigationManager
 
-<GenreAddEditForm Genre="Genre" OnValidSubmit="Edit" />
+<GenreAddEditForm Genre="model" Loading="_loading" OnValidSubmit="Edit" />
+
+@if (_showError)
+{
+    <p style="color: red;">The request could not be processed.</p>
+}
 
 @code {
     [Parameter]
     public int Id { get; set; }
-    private GenreDto Genre;
+    private GenreDto model = new();
+    private bool _loading = false;
+    private bool _showError = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Genre = new GenreDto { Id = this.Id, Name = "Comedy" };
+        model = await genreApi.GetById(Id);
     }
 
-    private void Edit()
+    private async Task Edit()
     {
-        Console.WriteLine($"New Genre info \nId: {Genre.Id} \nName: {Genre.Name}");
+        _loading = true;
+
+        var result = await genreApi.Update(model);
+
+        if(result is null)
+        {
+            navigationManager.NavigateTo("genres");
+        }
+        else
+        {
+            _showError = true;
+            Console.WriteLine(result);
+        }
+       
+        _loading = false;
     }
 }
