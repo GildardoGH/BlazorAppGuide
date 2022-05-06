@@ -1,4 +1,5 @@
-﻿using BlazorAppGuide.Shared.Dto;
+﻿using BlazorAppGuide.Shared;
+using BlazorAppGuide.Shared.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,16 @@ namespace BlazorAppGuide.Server.Controllers
                 DateOfBirth = a.DateOfBirth,
                 YearsActive = a.YearsActive
             }).OrderBy(a => a.FirstName).ToListAsync();
+        }
+
+        [HttpGet("as-generic-list")]
+        public async Task<List<SelectItem<int>>> GetAsGenericList()
+        {
+            return await context.Actors.Select(a => new SelectItem<int>
+            {
+                Value = a.Id,
+                Text = $"{a.FirstName} {a.LastName}"
+            }).ToListAsync();
         }
     }
 }

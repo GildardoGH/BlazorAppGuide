@@ -1,4 +1,5 @@
 ﻿using BlazorAppGuide.Client.Services.Abstractions;
+using BlazorAppGuide.Shared;
 using BlazorAppGuide.Shared.Dto;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -30,6 +31,11 @@ namespace BlazorAppGuide.Client.Services.Implementations
         public async Task<List<ActorDto>> GetAll()
         {
             return await _httpClient.GetFromJsonAsync<List<ActorDto>>($"{_endpoint}/all");
+        }
+
+        public async Task<List<SelectItem<int>>> GetAsGenericList()
+        {
+            return await _httpClient.GetFromJsonAsync<List<SelectItem<int>>>($"{_endpoint}/as-generic-list");
         }
     }
 }

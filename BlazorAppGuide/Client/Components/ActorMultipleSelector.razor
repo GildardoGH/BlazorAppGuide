@@ -1,0 +1,58 @@
+﻿@using BlazorAppGuide.Shared
+
+<div>
+    <select @onchange="ItemChanged" class="form-control">
+        @foreach (var item in ListOptions)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+
+    <table>
+        @foreach (var item in ListSelected)
+        {
+            <tr>
+                <td>@item.Text</td>
+                <td><button class="btn btn-danger" @onclick="@(() => RemoveItem(item.Value))">X</button></td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+@code {
+    [Parameter]
+    public List<SelectItem<int>> ListOptions { get; set; }
+    [Parameter]
+    public List<SelectItem<int>> ListSelected { get; set; }
+    [Parameter]
+    public EventCallback<List<SelectItem<int>>> UserSelection { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        ListOptions = ListOptions.Except(ListSelected).ToList();
+    }
+
+    private void ItemChanged(ChangeEventArgs args)
+    {
+        var selection = Int32.Parse(args.Value.ToString());
+        var item = ListOptions.FirstOrDefault(o => o.Value == selection);
+
+        ListOptions.Remove(item);
+        ListSelected.Add(item);
+
+        UserSelection.InvokeAsync(ListSelected);
+    }
+
+    private void RemoveItem(int value)
+    {
+        var selection = ListSelected.FirstOrDefault(o => o.Value.Equals(value));
+        Console.WriteLine(selection.Text);
+        ListSelected.Remove(selection);
+        ListOptions.Add(selection);
+        ListOptions.OrderBy(o => o.Text);
+
+        UserSelection.InvokeAsync(ListSelected);
+    }
+}

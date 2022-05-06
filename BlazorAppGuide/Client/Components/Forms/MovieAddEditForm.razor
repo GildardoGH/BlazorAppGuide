@@ -1,4 +1,7 @@
-﻿<EditForm Model="Movie" OnValidSubmit="OnValidSubmit">
+﻿@inject IActorApi actorApi
+@using BlazorAppGuide.Shared
+
+<EditForm Model="Movie" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="form-group">
         <label>Title:</label>
@@ -14,7 +17,9 @@
              <InputDate class="form-control" @bind-Value="Movie.ReleaseDate"></InputDate>
         </div>
     </div>
-    
+
+    <ActorMultipleSelector ListOptions="listOptions" ListSelected="listSelected" UserSelection="AddActors"/>
+        
     <button type="submit" class="btn btn-success">     
         <img src="https://www.mansarovar.com.co/app/PQRS/LibraryCSS/giphy.gif" style="width:20px; height:20px;" class="@(Loading ? "" : "d-none")">
         Save
@@ -28,4 +33,17 @@
     public bool Loading { get; set; }
     [Parameter]
     public EventCallback OnValidSubmit { get; set; }
+
+    private List<SelectItem<int>> listOptions = new();
+    private List<SelectItem<int>> listSelected = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        listOptions = await actorApi.GetAsGenericList();
+    }
+
+    private void AddActors(List<SelectItem<int>> selected)
+    {
+        
+    }
 }
